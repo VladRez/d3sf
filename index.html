@@ -6,40 +6,57 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="https://d3js.org/topojson.v2.min.js"></script>
-    <script src="coord.js"></script>
+
     <style>
       path {
         fill: lightgray;
         stroke: #000;
-      }
-      .graticule {
-        fill: none;
-        stroke: #ccc;
-        stroke-width: 0.5px;
       }
       .foreground {
         fill: none;
         stroke: #333;
         stroke-width: 1.5px;
       }
+      div.tooltip {
+        position: absolute;
+        text-align: center;
+        width: auto;
+        height: auto;
+        padding: 2px;
+        font: 24px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        pointer-events: none;
+      }
     </style>
     <title>Document</title>
   </head>
   <body>
-    <svg width="100%" height="1600px"></svg>
+    <!-- <svg width="100%" height="1200px"></svg> -->
     <script>
       var lng = -122.434469,
         lat = 37.774313;
       var scale = 400;
       var center = [lng, lat];
-      const svg = d3.select("svg");
+      const tooltip = d3
+        .select("body")
+        .append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+      const svg = d3
+        .select("body")
+        .append("svg")
+        .attr("id", "sfmap")
+        .attr("width", "100%")
+        .attr("height", "1200px");
 
       //   const myProjection = d3.geoAlbers();
       const myProjection = d3
         .geoMercator()
         .center(center)
         .scale(400000)
-        .translate([window.innerWidth / 2, window.innerWidth / 3]);
+        .translate([window.innerWidth / 2, window.innerWidth / 4.5]);
 
       const path = d3.geoPath().projection(myProjection);
 
@@ -53,14 +70,28 @@
           .enter()
           .append("path")
           .attr("d", path);
+      }
 
-       
+      d3.queue()
+        .defer(d3.json, "euSfGeo.json")
+        .defer(d3.csv, "2018pdi.csv")
+        .await((err, mapData, dotData) => {
+          drawMap(err, mapData);
+          plotDots(err, dotData);
+        });
 
-        d3.csv("2018pdi.csv", (err,d) => {
-          if (err) throw error;
-          debugger
-            coor = d.map(point=>{return {coordinates: [+point.X,+point.Y]}})
-           svg
+      // d3.json("euSfGeo.json", drawMap);
+      function plotDots(err, d) {
+        if (err) throw error;
+
+        coor = d.map(point => {
+          return {
+            id: point.IncidntNum,
+            category: point.Category,
+            coordinates: [+point.X, +point.Y]
+          };
+        });
+        svg
           .append("g")
           .selectAll("circle")
           .data(coor)
@@ -69,12 +100,30 @@
           .attr("cy", d => myProjection(d.coordinates)[1])
           .attr("cx", d => myProjection(d.coordinates)[0])
           .attr("r", 2)
-          .attr("fill", "red");
-          
-        })
+          .attr("fill", "red")
+          .attr("id", d => d.id)
+          .attr("category", d => d.category)
+          .on("mouseover", function(d) {
+            d3.select(this).style("fill", "orange");
+            tooltip
+              .transition()
+              .duration(200)
+              .style("opacity", 0.9);
+            let coordHtmlInfo = `Category: ${d.category}, lat: ${
+              d.coordinates[1]
+            }, lng: ${d.coordinates[0]}`;
+            tooltip.html(coordHtmlInfo);
+            // Get x & y co-ordinates in pixels
+            // console.log(d3.mouse(this));
+          })
+          .on("mouseout", function(d) {
+            d3.select(this).style("fill", "red");
+            tooltip
+              .transition()
+              .duration(200)
+              .style("opacity", 0);
+          });
       }
-
-      d3.json("euSfGeo.json", drawMap);
     </script>
   </body>
 </html>
