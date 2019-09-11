@@ -18,8 +18,8 @@
       }
 
       path.sfmapdistrictpath {
-        fill: rgba(0, 255, 255, 0.774);
-        stroke: rgb(0, 0, 0);
+        fill: rgba(255, 60, 0, 0.219);
+        stroke: rgb(217, 255, 0);
       }
       .foreground {
         fill: none;
@@ -102,28 +102,36 @@
         .await((err, mapData, pdData,dotData) => {
           drawMap(err, mapData);
           drawPDMap(err, pdData)
+          let expenseCount = 
+          d3.nest()
+            .key((d)=>d.PdDistrict)
+            .rollup((v)=>v.length)
+            .entries(dotData)
+
+           console.log(expenseCount) 
+                              
           // plotDots(err, dotData,4);
-          d3.select("body").append("h1")
-          var stepper = setInterval((function(){
-            var step = 0,
-                month = 12;
-                return function(){
-                  year = timeline_step(step++, month)
-                }
-          })(),1000);
+          // d3.select("body").append("h1")
+          // var stepper = setInterval((function(){
+          //   var step = 0,
+          //       month = 12;
+          //       return function(){
+          //         year = timeline_step(step++, month)
+          //       }
+          // })(),1000);
 
-          function timeline_step(step, month){
-            d3.select("h1").html(step)
-            requestAnimationFrame(function(){
-              plotDots(err, dotData, step)
-            })
-            if (step >= month){
-              clearInterval(stepper)
-            }
+          // function timeline_step(step, month){
+          //   d3.select("h1").html(step)
+          //   requestAnimationFrame(function(){
+          //     plotDots(err, dotData, step)
+          //   })
+          //   if (step >= month){
+          //     clearInterval(stepper)
+          //   }
 
-            return month
+          //   return month
 
-          }
+          // }
         });
 
       // d3.json("euSfGeo.json", drawMap);
