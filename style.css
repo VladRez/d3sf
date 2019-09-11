@@ -1,0 +1,31 @@
+body {
+  background-color: #333;
+}
+path.sfmappath {
+  fill: lightgray;
+  stroke: lightgray;
+}
+
+path.sfmapdistrictpath {
+  fill: rgba(255, 60, 0, 0.219);
+  stroke: rgb(217, 255, 0);
+}
+.foreground {
+  fill: none;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: auto;
+  height: auto;
+  padding: 2px;
+  font: 24px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+
