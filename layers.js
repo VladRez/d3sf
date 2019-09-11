@@ -43,8 +43,29 @@ function drawMap(err, geojson, path) {
     .attr("d", path);
 }
 
-function drawPDMap(err, geojson, path) {
+function drawPDMap(err, geojson, path, scaleData) {
   if (err) throw err;
+  
+
+  let domain = scaleData.map(d => d.value);
+
+  let colorScale = d3
+    .scaleLinear()
+    .domain(domain)
+    .range(['#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a','#66bd63','#1a9850']);
+
+  for (let i = 0; i < scaleData.length; i++) {
+    let scaleDataDistrict = scaleData[i].key;
+    let value = scaleData[i].value;
+    for (let j = 0; j < geojson.features.length; j++) {
+      let geoJsonDistrict = geojson.features[j].properties.district;
+
+      if (scaleDataDistrict === geoJsonDistrict) {
+        geojson.features[j].properties.value = value;
+        break;
+      }
+    }
+  }
 
   d3.select("#sfmap")
     .append("g")
@@ -53,5 +74,12 @@ function drawPDMap(err, geojson, path) {
     .enter()
     .append("path")
     .attr("class", "sfmapdistrictpath")
-    .attr("d", path);
+    .attr("d", path)
+    .style("fill", d => {
+      let propertyValue = d.properties.value;
+
+      if (propertyValue) {
+        return colorScale(propertyValue);
+      }
+    });
 }

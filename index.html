@@ -22,12 +22,12 @@
         .defer(d3.csv, "data/2018pdi.csv")
         .await((err, mapData, pdData, dotData) => {
           const sfMap = initMap();
-
+          let scaleData = util.pivot.incidentByDistrict(dotData);
+        
           drawMap(err, mapData, sfMap.path);
-          drawPDMap(err, pdData, sfMap.path);
-          plotDots(err, dotData, sfMap.projection)
-          let result = util.pivot.incidentByDistrict(dotData);
-          console.log(result);
+          drawPDMap(err, pdData, sfMap.path, scaleData);
+          // plotDots(err, dotData, sfMap.projection)
+          
         });
     </script>
   </body>
