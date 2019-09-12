@@ -3,9 +3,10 @@ function initMap() {
   var lat = 37.774313;
   var scale = 400000;
   var center = [lng, lat];
-  var width = window.innerWidth / 2;
-  var height = window.innerWidth / 4.6;
+  var width = window.innerWidth /2;
+  var height = window.innerHeight /2.5;
 
+  const dayHeader = d3.select("body").append('h1').attr("id","currentTime")
   const tooltip = d3
     .select("body")
     .append("div")
@@ -16,7 +17,13 @@ function initMap() {
     .append("svg")
     .attr("id", "sfmap")
     .attr("width", "100%")
-    .attr("height", "1000px");
+    .attr("height", "1100px")
+    .call(
+      d3.zoom().on("zoom", function() {
+          
+        svg.attr("transform", d3.event.transform);
+      })
+    );
 
   //   const myProjection = d3.geoAlbers();
   const myProjection = d3
@@ -27,7 +34,9 @@ function initMap() {
 
   const path = d3.geoPath().projection(myProjection);
 
-  return { path, projection: myProjection };
+  //   svg.call(zoom)
+
+  return { svg, path, projection: myProjection };
 }
 
 function drawMap(err, geojson, path) {
@@ -45,14 +54,23 @@ function drawMap(err, geojson, path) {
 
 function drawPDMap(err, geojson, path, scaleData) {
   if (err) throw err;
-  
 
   let domain = scaleData.map(d => d.value);
 
   let colorScale = d3
     .scaleLinear()
     .domain(domain)
-    .range(['#d73027','#f46d43','#fdae61','#fee08b','#ffffbf','#d9ef8b','#a6d96a','#66bd63','#1a9850']);
+    .range([
+      "#d73027",
+      "#f46d43",
+      "#fdae61",
+      "#fee08b",
+      "#ffffbf",
+      "#d9ef8b",
+      "#a6d96a",
+      "#66bd63",
+      "#1a9850"
+    ]);
 
   for (let i = 0; i < scaleData.length; i++) {
     let scaleDataDistrict = scaleData[i].key;
@@ -67,7 +85,7 @@ function drawPDMap(err, geojson, path, scaleData) {
     }
   }
 
-  d3.select("#sfmap")
+  let districts = d3.select("#sfmap")
     .append("g")
     .selectAll("path")
     .data(geojson.features)
@@ -81,5 +99,7 @@ function drawPDMap(err, geojson, path, scaleData) {
       if (propertyValue) {
         return colorScale(propertyValue);
       }
-    });
+    })
+    
+
 }

@@ -23,11 +23,36 @@
         .await((err, mapData, pdData, dotData) => {
           const sfMap = initMap();
           let scaleData = util.pivot.incidentByDistrict(dotData);
-        
+
           drawMap(err, mapData, sfMap.path);
           drawPDMap(err, pdData, sfMap.path, scaleData);
-          // plotDots(err, dotData, sfMap.projection)
-          
+
+          var stepper = setInterval(
+            (function() {
+              var date = new Date("1-1-2018"),
+                endDate = new Date("5-30-2018");
+              return function() {
+                year = timeline_step(
+                  new Date(date.setDate(date.getDate() + 1)),
+                  endDate
+                );
+              };
+            })(),
+            50
+          );
+
+          function timeline_step(date, endDate) {
+            
+            requestAnimationFrame(function() {
+              d3.select("h1#currentTime").html(util.formatDate(date));
+              plotDots(err, dotData, sfMap.projection, util.formatDate(date));
+            });
+            if (date >= endDate) {
+              clearInterval(stepper);
+            }
+
+            return endDate;
+          }
         });
     </script>
   </body>

@@ -9,7 +9,7 @@ path.sfmappath {
 path.sfmapdistrictpath {
   /* fill: rgba(255, 60, 0, 0.219); */
   stroke: rgb(217, 255, 0);
-  fill-opacity: 0.2;
+  fill-opacity: 0.1;
 }
 .foreground {
   fill: none;
@@ -29,4 +29,9 @@ div.tooltip {
   pointer-events: none;
 }
 
+circle.incidents {
+    stroke: black;
+    stroke-width: 1px;
+    fill: red;
+}
 

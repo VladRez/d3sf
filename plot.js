@@ -1,10 +1,12 @@
-function plotDots(err, d, myProjection) {
+function plotDots(err, d, myProjection, date) {
   if (err) throw error;
-  coor = d.map(point => {
+  debugger
+  coor = d.filter(p=>{ debugger ; return util.formatDate(new Date(p.Date)) === date}).map(point => {
     return {
       id: point.IncidntNum,
       category: point.Category,
-      coordinates: [+point.X, +point.Y]
+      coordinates: [+point.X, +point.Y],
+      resolution: point.Resolution
     };
   });
 
@@ -17,14 +19,14 @@ function plotDots(err, d, myProjection) {
     .attr("cy", d => myProjection(d.coordinates)[1])
     .attr("cx", d => myProjection(d.coordinates)[0])
     .attr("r", 2)
-    .attr("fill", "red")
+    .attr("class", "incidents")
     .attr("id", d => d.id)
+    .style("fill", d =>  d.resolution === 'NONE' ? 'red' : 'green')
     
-    // .transition().style("opacity","0").duration(2000)
     // .transition().style("opacity","1").duration(2000)
     .attr("category", d => d.category)
     .on("mouseover", function(d) {
-      d3.select(this).style("fill", "orange");
+      d3.select(this).style("fill", "yellow");
       
       let tooltip = d3.select(".tooltip")
       tooltip.transition()
@@ -38,10 +40,10 @@ function plotDots(err, d, myProjection) {
       // console.log(d3.mouse(this));
     })
     .on("mouseout", function(d) {
-      d3.select(this).style("fill", "red");
+      d3.select(this).style("fill", d =>  d.resolution === 'NONE' ? 'red' : 'green');
       let tooltip = d3.select(".tooltip")
       tooltip.transition()
-        .duration(500)
+        .duration(200)
         .style("opacity", 0);
     }).on("click", function(d){
         // debugger
@@ -53,7 +55,7 @@ function plotDots(err, d, myProjection) {
         //                         + "lat" + "," + "lon"
         //                         + "&amp;spn=0.199154,0.399727&amp;t=m&amp;z="
         //                         + "zoom" + "\"" + "></iframe>"
-    });
+    }).transition().style("opacity","0.3").duration(800);
 }
 
 // d3.select("body")

@@ -6,5 +6,7 @@ var util = {
         .key(d => d.PdDistrict)
         .rollup(v => v.length)
         .entries(data)
-  }
+  },
+
+  formatDate: (d) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
 };
