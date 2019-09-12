@@ -8,5 +8,5 @@ var util = {
         .entries(data)
   },
 
-  formatDate: (d) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`
+  formatDate: (d) => `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`
 };
