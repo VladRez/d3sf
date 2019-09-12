@@ -14,7 +14,6 @@
     <title>D3 Sf</title>
   </head>
   <body>
-    <!-- <svg width="100%" height="1200px"></svg> -->
     <script>
       d3.queue()
         .defer(d3.json, "data/euSfGeo.json")
@@ -30,9 +29,9 @@
           var stepper = setInterval(
             (function() {
               var date = new Date("1-1-2018"),
-                endDate = new Date("5-30-2018");
+                endDate = new Date("4-1-2018");
               return function() {
-                year = timeline_step(
+                year = timelineStep(
                   new Date(date.setDate(date.getDate() + 1)),
                   endDate
                 );
@@ -41,12 +40,12 @@
             50
           );
 
-          function timeline_step(date, endDate) {
-            
+          function timelineStep(date, endDate) {
             requestAnimationFrame(function() {
-              d3.select("h1#currentTime").html(util.formatDate(date));
+              d3.select("#currentTime").html(util.formatDate(date));
               plotDots(err, dotData, sfMap.projection, util.formatDate(date));
             });
+
             if (date >= endDate) {
               clearInterval(stepper);
             }

@@ -3,10 +3,18 @@ function initMap() {
   var lat = 37.774313;
   var scale = 400000;
   var center = [lng, lat];
-  var width = window.innerWidth /2;
-  var height = window.innerHeight /2.5;
-
-  const dayHeader = d3.select("body").append('h1').attr("id","currentTime")
+  var width = window.innerWidth / 2;
+  var height = window.innerHeight / 2.5;
+  const dayHeader = d3
+    .select("body")
+    .append("div")
+    .attr("id", "currentTime")
+    .attr("class", "timestamp");
+  const charts = d3
+    .select("body")
+    .append("table")
+    .attr("id", "charts")
+    .attr("class", "charts");
   const tooltip = d3
     .select("body")
     .append("div")
@@ -20,7 +28,6 @@ function initMap() {
     .attr("height", "1100px")
     .call(
       d3.zoom().on("zoom", function() {
-          
         svg.attr("transform", d3.event.transform);
       })
     );
@@ -85,7 +92,8 @@ function drawPDMap(err, geojson, path, scaleData) {
     }
   }
 
-  let districts = d3.select("#sfmap")
+  let districts = d3
+    .select("#sfmap")
     .append("g")
     .selectAll("path")
     .data(geojson.features)
@@ -99,7 +107,5 @@ function drawPDMap(err, geojson, path, scaleData) {
       if (propertyValue) {
         return colorScale(propertyValue);
       }
-    })
-    
-
+    });
 }
