@@ -4,7 +4,7 @@ function initMap() {
   var scale = 400000;
   var center = [lng, lat];
   var width = window.innerWidth / 2;
-  var height = window.innerHeight / 2.5;
+  var height = window.innerHeight / 2;
   const dayHeader = d3
     .select("body")
     .append("div")
@@ -14,7 +14,7 @@ function initMap() {
     .select("body")
     .append("table")
     .attr("id", "charts")
-    .attr("class", "charts");
+    .attr("class", "chartsTable");
   const tooltip = d3
     .select("body")
     .append("div")
@@ -22,15 +22,18 @@ function initMap() {
     .style("opacity", 0);
   const svg = d3
     .select("body")
+    .append("div")
+    .attr("class","mapcanvas")
     .append("svg")
     .attr("id", "sfmap")
     .attr("width", "100%")
     .attr("height", "1100px")
-    .call(
-      d3.zoom().on("zoom", function() {
-        svg.attr("transform", d3.event.transform);
-      })
-    );
+    .style("z-index", "-1")
+    // .call(
+    //   d3.zoom().on("zoom", function() {
+    //     svg.attr("transform", d3.event.transform);
+    //   })
+    // );
 
   //   const myProjection = d3.geoAlbers();
   const myProjection = d3

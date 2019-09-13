@@ -2,11 +2,10 @@ body {
   background-color: #333;
 }
 
-svg.sfmap {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: -1;
+.mapcanvas {
+  float: right;
+  width: 80%;
+  height: 100%;
 }
 
 path.sfmappath {
@@ -57,24 +56,29 @@ path.sfmapdistrictpath {
   z-index: 0;
 }
 
-.charts {
+.chartsTable {
   /* visibility: visible; */
-  position: absolute;
+  /* position: absolute; */
   /* float: right; */
   /* margin-left: 80%; */
-  text-align: left;
+  /* text-align: left;
   width: 300px;
   height: 200px;
   padding: 2px;
   font: 12px sans-serif;
+  
+  pointer-events: none;
+  float: right;
+  margin-top: 5%;
+  z-index: 10; */
+  float: left;
+  /* position: absolute; */
+  width:20%;
+  margin-top: 5%;
   background-color: rgb(0, 0, 0, 0.5);
   color: white;
   border: 0px;
   border-radius: 8px;
-  pointer-events: none;
-  float: right;
-  margin-top: 5%;
-  z-index: 10;
 }
 
 circle.incidents {

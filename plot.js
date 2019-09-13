@@ -44,7 +44,7 @@ function plotDots(err, d, myProjection, date) {
 
   let categoryTable = `<table><tbody>${categoryTableRows}</tbody></table>`;
 
-  d3.select(".charts").html(categoryTable);
+  d3.select("#charts").html(categoryTable);
 
   d3.select("#sfmap")
     .append("g")
@@ -61,7 +61,11 @@ function plotDots(err, d, myProjection, date) {
     // .transition().style("opacity","1").duration(2000)
     .attr("category", d => d.category)
     .on("mouseover", function(d) {
-      d3.select(this).style("fill", "yellow");
+      d3.select(this)
+        .style("opacity", "1")
+        .attr("r", 5)
+        .style("stroke", "orange")
+        .style("stroke-width", "2px");
       let tableBody = Object.keys(d).map(
         info => `<tr><td>${info}</td><td>${d[info]}</td></tr>`
       );
@@ -79,9 +83,12 @@ function plotDots(err, d, myProjection, date) {
       tooltip.html(table);
     })
     .on("mouseout", function(d) {
-      d3.select(this).style("fill", d =>
-        d.resolution === "NONE" ? "red" : "green"
-      );
+      d3.select(this)
+        .style("fill", d => (d.resolution === "NONE" ? "red" : "green"))
+        .style("opacity", ".3")
+        .attr("r", 2)
+        .style("stroke", "black")
+        .style("stroke-width", "1px");
       let tooltip = d3.select(".tooltip");
       tooltip
         .transition()
@@ -106,10 +113,27 @@ function plotDots(err, d, myProjection, date) {
     .duration(800);
 
   categoryByTime.forEach(cat => {
-    d3.select(`tr[id='${cat.key}']`).on("mouseover", () => {
-      //   d3.select(this).style("color", "yellow");
-      d3.selectAll(`circle[id='${cat.key}']`).style("fill", "blue");
-    });
+    let key = cat.key;
+    d3.select(`tr[id='${cat.key}']`)
+      .on("mouseover", function() {
+        //  debugger
+        let circles = d3.selectAll(`circle[category='${this.id}']`);
+        circles
+          .style("opacity", "1")
+          .attr("r", 5)
+          .style("stroke", "orange")
+          .style("stroke-width", "2px");
+      })
+      .on("mouseout", function() {
+        let circles = d3
+          .selectAll(`circle[category='${this.id}']`)
+          .attr("class", "incidents");
+        circles
+          .style("opacity", ".3")
+          .attr("r", 2)
+          .style("stroke", "black")
+          .style("stroke-width", "1px");
+      });
   });
 }
 
