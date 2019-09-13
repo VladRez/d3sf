@@ -3,7 +3,7 @@ function plotDots(err, d, myProjection, date) {
 
   coor = d
     .filter(p => {
-      return util.formatDate(new Date(p.Date)) === date;
+      return util.formatDate(new Date(p.Date)) === date &&  !['OTHER OFFENSES', 'NON-CRIMINAL'].includes(p.Category);
     })
     .map(point => {
       return {
@@ -21,7 +21,7 @@ function plotDots(err, d, myProjection, date) {
 
   acc = d
     .filter(p => {
-      return util.formatDate(new Date(p.Date)) <= date;
+      return util.formatDate(new Date(p.Date)) <= date && !['OTHER OFFENSES', 'NON-CRIMINAL'].includes(p.Category);
     })
     .map(point => {
       return {
@@ -69,10 +69,10 @@ function plotDots(err, d, myProjection, date) {
       let tableBody = Object.keys(d).map(
         info => `<tr><td>${info}</td><td>${d[info]}</td></tr>`
       );
-      let url = `http://www.google.com/maps/place/${d.coordinates
-        .reverse()
-        .join(",")}`;
-      tableBody = `${tableBody}<tr><td>google</td><td><a href="${url}">${d.id}</a></td></tr>`;
+      // let url = `http://www.google.com/maps/place/${d.coordinates
+      //   .reverse()
+      //   .join(",")}`;
+      // tableBody = `${tableBody}<tr><td>google</td><td><a href="${url}">${d.id}</a></td></tr>`;
       let tooltip = d3.select(".tooltip");
       let table = `<table><tbody>${tableBody}</tbody></table>`;
       tooltip
