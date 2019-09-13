@@ -3,7 +3,10 @@ function plotDots(err, d, myProjection, date) {
 
   coor = d
     .filter(p => {
-      return util.formatDate(new Date(p.Date)) === date &&  !['OTHER OFFENSES', 'NON-CRIMINAL'].includes(p.Category);
+      return (
+        util.formatDate(new Date(p.Date)) === date &&
+        !["OTHER OFFENSES", "NON-CRIMINAL"].includes(p.Category)
+      );
     })
     .map(point => {
       return {
@@ -21,7 +24,10 @@ function plotDots(err, d, myProjection, date) {
 
   acc = d
     .filter(p => {
-      return util.formatDate(new Date(p.Date)) <= date && !['OTHER OFFENSES', 'NON-CRIMINAL'].includes(p.Category);
+      return (
+        util.formatDate(new Date(p.Date)) <= date &&
+        !["OTHER OFFENSES", "NON-CRIMINAL"].includes(p.Category)
+      );
     })
     .map(point => {
       return {
@@ -41,7 +47,9 @@ function plotDots(err, d, myProjection, date) {
       detail =>
         `<tr id="${detail.key}"><td>${detail.key}</td><td>${detail.value}</td></tr>`
     );
-
+  categoryTableRows = `${categoryTableRows}<tr id=totals><td>Totals</td><td>${categoryByTime.reduce(
+    (c, a) =>{debugger; return a.value + c}
+  , 0)}</td></tr>`;
   let categoryTable = `<table><tbody>${categoryTableRows}</tbody></table>`;
 
   d3.select("#charts").html(categoryTable);

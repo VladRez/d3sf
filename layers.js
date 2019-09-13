@@ -110,5 +110,5 @@ function drawPDMap(err, geojson, path, scaleData) {
       if (propertyValue) {
         return colorScale(propertyValue);
       }
-    });
+    })
 }
