@@ -2,7 +2,7 @@
 
 Check out the [Live Site][1]
 
-![map](docs/d3sf.js)
+![map](docs/d3sf.png)
 
 Purpose:
 
