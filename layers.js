@@ -3,8 +3,8 @@ function initMap() {
   var lat = 37.774313;
   var scale = 400000;
   var center = [lng, lat];
-  var width = window.innerWidth / 2;
-  var height = window.innerHeight / 2;
+  var width = window.innerWidth / 3;
+  var height = window.innerHeight / 3;
   const dayHeader = d3
     .select("body")
     .append("div")
