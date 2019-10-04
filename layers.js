@@ -1,4 +1,4 @@
-function getArc(){
+function getMeter(){
   return d3
     .arc()
     .innerRadius(170)
@@ -6,24 +6,48 @@ function getArc(){
     .startAngle(0);
 }
 
+function updateMeter(loaded, total){
+  d3.select(".foreground")
+  .transition()
+  .duration(1000)
+  .ease(d3.easeLinear)
+  .attrTween("d", d => {
+    let interpolate = d3.interpolate(
+      d.endAngle,
+      2 * Math.PI * (loaded / total)
+    );
+    return function(t) {
+      d.endAngle = interpolate(t);
+      return getMeter()(d);
+    };
+  });
+  let percentageComplete = Math.floor((loaded / total) * 100);
+  console.log(`Data % ${percentageComplete}`);
+
+  d3.select(".foreground").append("text")
+    .attr("text-anchor", "middle")
+    .attr("dy", ".35em")
+    .attr("font-size", "24")
+    .text(percentageComplete);
+}
 
 function addNavControls(hash) {
 
 }
 
-function loadingArc() {
+function loadingMeter() {
   let width = 960, height = 500;
 
-  let arc = getArc();
+  let arc = getMeter();
 
   let svg = d3
     .select("body")
     .append("svg")
-    .attr("id", "loadingArc")
-    .attr("width", width)
+    .attr("id", "loadingMeter")
+    .attr("width", "100%")
     .attr("height", height)
     .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+    .attr("transform", "translate(" + width  + "," + height / 2 + ")")
     
     .style("z-index", "1000");
 
@@ -39,18 +63,29 @@ function loadingArc() {
   meter
     .append("path")
     .datum({ endAngle: 0 })
-    .style("fill", "orange")
+    .style("fill", "green")
     .attr("class", "foreground")
     .attr("d", arc);
 }
 
+
+function cleanupMap(){
+  ["currentTime", "hoverinfo", "sfmap"].forEach(ele=>{
+    let temp = document.getElementById(ele)
+    temp !== null ? temp.remove() : null; 
+  })
+}
+
 function initMap() {
+  
   var lng = -122.434469;
   var lat = 37.774313;
   var scale = 500000;
   var center = [lng, lat];
   var width = 2000 ;
   var height = 800 ;
+  
+  
   const dayHeader = d3
     .select("body")
     .append("div")
@@ -64,6 +99,7 @@ function initMap() {
   const tooltip = d3
     .select("body")
     .append("div")
+    .attr("id", "hoverinfo")
     .attr("class", "tooltip")
     .style("opacity", 0);
   const svg = d3

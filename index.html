@@ -10,83 +10,43 @@
     <script src="layers.js"></script>
     <script src="util.js"></script>
     <script src="map.js"></script>
+   
     <link rel="stylesheet" href="style.css" />
-
-    <title>D3 Sf</title>
+    <title>d3Sf Police Incidents</title>
   </head>
   <body>
+    
+    <form id="userform" onsubmit=>
+      <label>Enter start date</label>
+      <input
+        type="date"
+        name="myDate"
+        min="2018-01-01"
+        max="2018-03-30"
+        value="2018-01-01"
+      />
+
+      <label>Enter end date</label>
+      <input
+        type="date"
+        name="myDate"
+        min="2018-01-01"
+        max="2018-03-30"
+        value="2018-01-01"
+      />
+      <input type="submit" value="display" />
+    </form>
+
     <script>
-      // loading donut
-      loadingArc();
+       document.getElementById('userform').onsubmit = (event) =>{
+        event.preventDefault();
+          const startDate = event.currentTarget[0].value;
+          const endDate = event.currentTarget[1].value;
+          getData({startDate, endDate});
+          event.preventDefault();
+          }
 
-      // load all data
-      d3.queue()
-        .defer(f => {
-          d3.json("data/euSfGeo.json")
-            .on("progress", e => {
-              if (e.lengthComputable) {
-                let percentageComplete = Math.floor((e.loaded / e.total) * 100);
-                console.log(`Plot Data % ${percentageComplete}`);
-                let foreground = d3.select(".foreground");
-                foreground
-                  .transition()
-                  .duration(1000)
-                  .ease(d3.easeLinear)
-                  .attrTween("d", d => {
-                    let interpolate = d3.interpolate(
-                      d.endAngle,
-                      2 * Math.PI * (e.loaded / e.total)
-                    );
-                    return function(t) {
-                      d.endAngle = interpolate(t);
-                      return getArc()(d);
-                    };
-                  });
-              }
-            })
-            .get((error, data) => {
-              f(error, data);
-            });
-        })
-        .defer(d3.json, "data/PoliceDistricts.json")
-        .defer(f => {
-          d3.csv("data/2018pdi.csv")
-            .on("progress", e => {
-              e.preventDefault();
-
-              if (e.lengthComputable) {
-                let percentageComplete = Math.floor((e.loaded / e.total) * 100);
-                console.log(`Plot Data % ${percentageComplete}`);
-                let foreground = d3.select(".foreground");
-                foreground
-                  .transition()
-                  .duration(1000)
-                  .ease(d3.easeLinear)
-                  .attrTween("d", d => {
-                    let interpolate = d3.interpolate(
-                      d.endAngle,
-                      2 * Math.PI * (e.loaded / e.total)
-                    );
-                    return function(t) {
-                      d.endAngle = interpolate(t);
-                      return getArc()(d);
-                    };
-                  });
-              }
-            })
-            .get((error, data) => {
-              f(error, data);
-            });
-        })
-        .await((err, mapData, pdData, dotData) => {
-          d3.selectAll("#loadingArc").remove();
-          setupMap({ err, mapData, pdData, dotData });
-        });
-    </script>
-    <label>Enter a date before 1989-10-30:</label>
-    <input type="date" name="myDate" max="2018-01-01" />
-
-    <label>Enter a date after 2001-01-01:</label>
-    <input type="date" name="myDate" min="2018-03-30" />
+       </script>
+   
   </body>
 </html>
