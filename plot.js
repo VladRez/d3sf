@@ -48,11 +48,11 @@ function plotDots(err, d, myProjection, date) {
         `<tr id="${detail.key}"><td>${detail.key}</td><td>${detail.value}</td></tr>`
     );
   categoryTableRows = `${categoryTableRows}<tr id=totals><td>Totals</td><td>${categoryByTime.reduce(
-    (c, a) =>{debugger; return a.value + c}
+    (c, a) =>{return a.value + c}
   , 0)}</td></tr>`;
   let categoryTable = `<table><tbody>${categoryTableRows}</tbody></table>`;
 
-  d3.select("#charts").html(categoryTable);
+  // d3.select("#charts").html(categoryTable);
 
   d3.select("#sfmap")
     .append("g")

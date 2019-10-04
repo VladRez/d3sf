@@ -2,10 +2,12 @@ body {
   background-color: #333;
 }
 
+
+
 .mapcanvas {
-  float: right;
-  width: 80%;
-  height: 100%;
+  /* float: left; */
+  /* width: 500px;
+  height: 960px; */
 }
 
 path.sfmappath {

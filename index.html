@@ -9,21 +9,39 @@
     <script src="plot.js"></script>
     <script src="layers.js"></script>
     <script src="util.js"></script>
+    <script src="map.js"></script>
     <link rel="stylesheet" href="style.css" />
 
     <title>D3 Sf</title>
   </head>
   <body>
     <script>
+      // loading donut
       loadingArc();
+
+      // load all data
       d3.queue()
         .defer(f => {
           d3.json("data/euSfGeo.json")
-            .on("progress", function(e) {
+            .on("progress", e => {
               if (e.lengthComputable) {
-                console.log(
-                  `Map Data % ${Math.floor((e.loaded / e.total) * 100)}`
-                );
+                let percentageComplete = Math.floor((e.loaded / e.total) * 100);
+                console.log(`Plot Data % ${percentageComplete}`);
+                let foreground = d3.select(".foreground");
+                foreground
+                  .transition()
+                  .duration(1000)
+                  .ease(d3.easeLinear)
+                  .attrTween("d", d => {
+                    let interpolate = d3.interpolate(
+                      d.endAngle,
+                      2 * Math.PI * (e.loaded / e.total)
+                    );
+                    return function(t) {
+                      d.endAngle = interpolate(t);
+                      return getArc()(d);
+                    };
+                  });
               }
             })
             .get((error, data) => {
@@ -33,35 +51,27 @@
         .defer(d3.json, "data/PoliceDistricts.json")
         .defer(f => {
           d3.csv("data/2018pdi.csv")
-            .on("progress", function(e) {
-              if (e.lengthComputable) {
-                var arc = d3
-                  .arc()
-                  .innerRadius(170)
-                  .outerRadius(220)
-                  .startAngle(0);
-                var dataset = {
-                  progress: e.loaded,
-                  total: e.total
-                };
-                let percentageComplete = Math.floor((e.loaded / e.total) * 100);
+            .on("progress", e => {
+              e.preventDefault();
 
-                let foreground = d3.select(".foreground")
+              if (e.lengthComputable) {
+                let percentageComplete = Math.floor((e.loaded / e.total) * 100);
+                console.log(`Plot Data % ${percentageComplete}`);
+                let foreground = d3.select(".foreground");
                 foreground
                   .transition()
                   .duration(1000)
                   .ease(d3.easeLinear)
-                  .attrTween("d", function(d) {
-                    var interpolate = d3.interpolate(
+                  .attrTween("d", d => {
+                    let interpolate = d3.interpolate(
                       d.endAngle,
-                      (2 * Math.PI * dataset["progress"]) / dataset["total"]
+                      2 * Math.PI * (e.loaded / e.total)
                     );
                     return function(t) {
                       d.endAngle = interpolate(t);
-                      return arc(d);
+                      return getArc()(d);
                     };
                   });
-                console.log(`Plot Data % ${percentageComplete}`);
               }
             })
             .get((error, data) => {
@@ -69,48 +79,14 @@
             });
         })
         .await((err, mapData, pdData, dotData) => {
-          const sfMap = initMap();
-          drawMap(err, mapData, sfMap.path);
-          
+          d3.selectAll("#loadingArc").remove();
+          setupMap({ err, mapData, pdData, dotData });
         });
-      // d3.queue()
-      //   .defer(d3.json, "data/euSfGeo.json")
-      //   .defer(d3.json, "data/PoliceDistricts.json")
-      //   .defer(d3.csv, "data/2018pdi.csv")
-      //   .await((err, mapData, pdData, dotData) => {
-      //     const sfMap = initMap();
-      //     let scaleData = util.pivot.incidentByDistrict(dotData);
-
-      //     drawMap(err, mapData, sfMap.path);
-      //     drawPDMap(err, pdData, sfMap.path, scaleData);
-
-      //     var stepper = setInterval(
-      //       (function() {
-      //         var date = new Date("1-1-2018"),
-      //           endDate = new Date("3-30-2018");
-      //         return function() {
-      //           year = timelineStep(
-      //             new Date(date.setDate(date.getDate() + 1)),
-      //             endDate
-      //           );
-      //         };
-      //       })(),
-      //       50
-      //     );
-
-      //   function timelineStep(date, endDate) {
-      //     requestAnimationFrame(function() {
-      //       d3.select("#currentTime").html(util.formatDate(date));
-      //       plotDots(err, dotData, sfMap.projection, util.formatDate(date));
-      //     });
-
-      //     if (date >= endDate) {
-      //       clearInterval(stepper);
-      //     }
-
-      //     return endDate;
-      //   }
-      // });
     </script>
+    <label>Enter a date before 1989-10-30:</label>
+    <input type="date" name="myDate" max="2018-01-01" />
+
+    <label>Enter a date after 2001-01-01:</label>
+    <input type="date" name="myDate" min="2018-03-30" />
   </body>
 </html>

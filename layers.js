@@ -1,24 +1,33 @@
-function loadingArc() {
-  let width = 960,
-    height = 500;
-
-  var arc = d3
+function getArc(){
+  return d3
     .arc()
     .innerRadius(170)
     .outerRadius(220)
     .startAngle(0);
+}
 
-  var svg = d3
+
+function addNavControls(hash) {
+
+}
+
+function loadingArc() {
+  let width = 960, height = 500;
+
+  let arc = getArc();
+
+  let svg = d3
     .select("body")
     .append("svg")
+    .attr("id", "loadingArc")
     .attr("width", width)
     .attr("height", height)
     .append("g")
     .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
-    .attr("id", "loadingArc")
+    
     .style("z-index", "1000");
 
-  var meter = svg.append("g");
+  let meter = svg.append("g");
   //background
   meter
     .append("path")
@@ -38,20 +47,20 @@ function loadingArc() {
 function initMap() {
   var lng = -122.434469;
   var lat = 37.774313;
-  var scale = 400000;
+  var scale = 500000;
   var center = [lng, lat];
-  var width = window.innerWidth / 3;
-  var height = window.innerHeight / 3;
+  var width = 2000 ;
+  var height = 800 ;
   const dayHeader = d3
     .select("body")
     .append("div")
     .attr("id", "currentTime")
     .attr("class", "timestamp");
-  const charts = d3
-    .select("body")
-    .append("table")
-    .attr("id", "charts")
-    .attr("class", "chartsTable");
+  // const charts = d3
+  //   .select("body")
+  //   .append("table")
+  //   .attr("id", "charts")
+  //   .attr("class", "chartsTable");
   const tooltip = d3
     .select("body")
     .append("div")
@@ -64,8 +73,8 @@ function initMap() {
     .append("svg")
     .attr("id", "sfmap")
     .attr("width", "100%")
-    .attr("height", "1100px")
-    .style("z-index", "-1");
+    .attr("height", "900px")
+    .style("z-index", "3");
   // .call(
   //   d3.zoom().on("zoom", function() {
   //     svg.attr("transform", d3.event.transform);
@@ -77,7 +86,7 @@ function initMap() {
     .geoMercator()
     .center(center)
     .scale(scale)
-    .translate([width, height]);
+    .translate([width / 2, height / 2]);
 
   const path = d3.geoPath().projection(myProjection);
 
