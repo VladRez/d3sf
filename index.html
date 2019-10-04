@@ -10,14 +10,13 @@
     <script src="layers.js"></script>
     <script src="util.js"></script>
     <script src="map.js"></script>
-   
     <link rel="stylesheet" href="style.css" />
     <title>d3Sf Police Incidents</title>
   </head>
   <body>
     
-    <form id="userform" onsubmit=>
-      <label>Enter start date</label>
+    <form id="userform" class="dateInputForm">
+      <label>Start date</label>
       <input
         type="date"
         name="myDate"
@@ -26,15 +25,29 @@
         value="2018-01-01"
       />
 
-      <label>Enter end date</label>
+      <label>End date</label>
       <input
         type="date"
         name="myDate"
         min="2018-01-01"
         max="2018-03-30"
-        value="2018-01-01"
+        value="2018-01-30"
       />
       <input type="submit" value="display" />
+      <label>Visualization of SF Police Calls for Service and Incidents</label>
+     <label>
+       unresolved
+        <svg height="10" width="10">
+            <circle cx="2" cy="2" r="2" stroke="black" stroke-width="1" fill="red" />
+          </svg>
+     </label>
+
+     <label>
+        resolved
+         <svg height="10" width="10">
+             <circle cx="2" cy="2" r="2" stroke="black" stroke-width="1" fill="green" />
+           </svg>
+      </label>
     </form>
 
     <script>
@@ -45,7 +58,6 @@
           getData({startDate, endDate});
           event.preventDefault();
           }
-
        </script>
    
   </body>

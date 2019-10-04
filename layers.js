@@ -87,10 +87,10 @@ function initMap() {
   
   
   const dayHeader = d3
-    .select("body")
+    .select(".dateInputForm")
     .append("div")
     .attr("id", "currentTime")
-    .attr("class", "timestamp");
+    .attr("class", "dateInputForm");
   // const charts = d3
   //   .select("body")
   //   .append("table")

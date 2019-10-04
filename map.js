@@ -33,9 +33,12 @@ function getData(dateRange) {
       setupMap({ err, mapData, pdData, dotData, dateRange });
     });
 }
+
 function setupMap(dataObj) {
   const sfMap = initMap();
   drawMap(dataObj.err, dataObj.mapData, sfMap.path);
+  let scaleData = util.pivot.incidentByDistrict(dataObj.dotData);
+  drawPDMap(dataObj.err, dataObj.pdData, sfMap.path, scaleData);
 
   let params = ({ startDate, endDate }) => {
     let date = new Date(startDate);

@@ -94,10 +94,11 @@ circle.incidents {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+  background: wheat;
 }
 
 .dateInputForm label {
-  margin: 5px 10px 5px 0;
+  margin: 10px;
 }
 
 .dateInputForm input {
@@ -108,24 +109,24 @@ circle.incidents {
   border: 1px solid #ddd;
 }
 
-.dateInputForm button {
+.dateInputForm input[type=submit] {
   padding: 10px 20px;
-  background-color: dodgerblue;
+  background-color: lightskyblue;
   border: 1px solid #ddd;
   color: white;
   cursor: pointer;
 }
 
-.form-inline button:hover {
+.dateInputForm input[type=submit]:hover {
   background-color: royalblue;
 }
 
 @media (max-width: 800px) {
-  .form-inline input {
+  .dateInputForm input {
     margin: 10px 0;
   }
   
-  .form-inline {
+  .dateInputForm {
     flex-direction: column;
     align-items: stretch;
   }
