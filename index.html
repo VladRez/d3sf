@@ -14,7 +14,6 @@
     <title>d3Sf Police Incidents</title>
   </head>
   <body>
-    
     <form id="userform" class="dateInputForm">
       <label>Start date</label>
       <input
@@ -35,30 +34,43 @@
       />
       <input type="submit" value="display" />
       <label>Visualization of SF Police Calls for Service and Incidents</label>
-     <label>
-       unresolved
+      <label>
+        unresolved
         <svg height="10" width="10">
-            <circle cx="2" cy="2" r="2" stroke="black" stroke-width="1" fill="red" />
-          </svg>
-     </label>
+          <circle
+            cx="2"
+            cy="2"
+            r="2"
+            stroke="black"
+            stroke-width="1"
+            fill="red"
+          />
+        </svg>
+      </label>
 
-     <label>
+      <label>
         resolved
-         <svg height="10" width="10">
-             <circle cx="2" cy="2" r="2" stroke="black" stroke-width="1" fill="green" />
-           </svg>
+        <svg height="10" width="10">
+          <circle
+            cx="2"
+            cy="2"
+            r="2"
+            stroke="black"
+            stroke-width="1"
+            fill="green"
+          />
+        </svg>
       </label>
     </form>
 
     <script>
-       document.getElementById('userform').onsubmit = (event) =>{
+      document.getElementById("userform").onsubmit = event => {
         event.preventDefault();
-          const startDate = event.currentTarget[0].value;
-          const endDate = event.currentTarget[1].value;
-          getData({startDate, endDate});
-          event.preventDefault();
-          }
-       </script>
-   
+        const startDate = event.currentTarget[0].value;
+        const endDate = event.currentTarget[1].value;
+        getData({ startDate, endDate });
+        event.preventDefault();
+      };
+    </script>
   </body>
 </html>

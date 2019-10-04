@@ -6,7 +6,12 @@ Check out the [Live Site][1]
 
 Purpose:
 
-Combining data from different sources to create a visualization. My plan was to make a d3 map similar to [this][9].
+Combining data from different sources to create a visualization.
+
+# Technology
+
++ JavaScript
++ D3js V4
 
 # Background and Challenges
 
