@@ -1,3 +1,40 @@
+function loadingArc() {
+  let width = 960,
+    height = 500;
+
+  var arc = d3
+    .arc()
+    .innerRadius(170)
+    .outerRadius(220)
+    .startAngle(0);
+
+  var svg = d3
+    .select("body")
+    .append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")")
+    .attr("id", "loadingArc")
+    .style("z-index", "1000");
+
+  var meter = svg.append("g");
+  //background
+  meter
+    .append("path")
+    .datum({ endAngle: 2 * Math.PI })
+    .style("fill", "#ddd")
+    .attr("d", arc);
+
+  //foreground
+  meter
+    .append("path")
+    .datum({ endAngle: 0 })
+    .style("fill", "orange")
+    .attr("class", "foreground")
+    .attr("d", arc);
+}
+
 function initMap() {
   var lng = -122.434469;
   var lat = 37.774313;
@@ -23,17 +60,17 @@ function initMap() {
   const svg = d3
     .select("body")
     .append("div")
-    .attr("class","mapcanvas")
+    .attr("class", "mapcanvas")
     .append("svg")
     .attr("id", "sfmap")
     .attr("width", "100%")
     .attr("height", "1100px")
-    .style("z-index", "-1")
-    // .call(
-    //   d3.zoom().on("zoom", function() {
-    //     svg.attr("transform", d3.event.transform);
-    //   })
-    // );
+    .style("z-index", "-1");
+  // .call(
+  //   d3.zoom().on("zoom", function() {
+  //     svg.attr("transform", d3.event.transform);
+  //   })
+  // );
 
   //   const myProjection = d3.geoAlbers();
   const myProjection = d3
@@ -110,5 +147,5 @@ function drawPDMap(err, geojson, path, scaleData) {
       if (propertyValue) {
         return colorScale(propertyValue);
       }
-    })
+    });
 }

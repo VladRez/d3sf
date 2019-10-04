@@ -15,44 +15,102 @@
   </head>
   <body>
     <script>
+      loadingArc();
       d3.queue()
-        .defer(d3.json, "data/euSfGeo.json")
+        .defer(f => {
+          d3.json("data/euSfGeo.json")
+            .on("progress", function(e) {
+              if (e.lengthComputable) {
+                console.log(
+                  `Map Data % ${Math.floor((e.loaded / e.total) * 100)}`
+                );
+              }
+            })
+            .get((error, data) => {
+              f(error, data);
+            });
+        })
         .defer(d3.json, "data/PoliceDistricts.json")
-        .defer(d3.csv, "data/2018pdi.csv")
+        .defer(f => {
+          d3.csv("data/2018pdi.csv")
+            .on("progress", function(e) {
+              if (e.lengthComputable) {
+                var arc = d3
+                  .arc()
+                  .innerRadius(170)
+                  .outerRadius(220)
+                  .startAngle(0);
+                var dataset = {
+                  progress: e.loaded,
+                  total: e.total
+                };
+                let percentageComplete = Math.floor((e.loaded / e.total) * 100);
+
+                let foreground = d3.select(".foreground")
+                foreground
+                  .transition()
+                  .duration(1000)
+                  .ease(d3.easeLinear)
+                  .attrTween("d", function(d) {
+                    var interpolate = d3.interpolate(
+                      d.endAngle,
+                      (2 * Math.PI * dataset["progress"]) / dataset["total"]
+                    );
+                    return function(t) {
+                      d.endAngle = interpolate(t);
+                      return arc(d);
+                    };
+                  });
+                console.log(`Plot Data % ${percentageComplete}`);
+              }
+            })
+            .get((error, data) => {
+              f(error, data);
+            });
+        })
         .await((err, mapData, pdData, dotData) => {
           const sfMap = initMap();
-          let scaleData = util.pivot.incidentByDistrict(dotData);
-
           drawMap(err, mapData, sfMap.path);
-          drawPDMap(err, pdData, sfMap.path, scaleData);
-
-          var stepper = setInterval(
-            (function() {
-              var date = new Date("1-1-2018"),
-                endDate = new Date("3-30-2018");
-              return function() {
-                year = timelineStep(
-                  new Date(date.setDate(date.getDate() + 1)),
-                  endDate
-                );
-              };
-            })(),
-            50
-          );
-
-          function timelineStep(date, endDate) {
-            requestAnimationFrame(function() {
-              d3.select("#currentTime").html(util.formatDate(date));
-              plotDots(err, dotData, sfMap.projection, util.formatDate(date));
-            });
-
-            if (date >= endDate) {
-              clearInterval(stepper);
-            }
-
-            return endDate;
-          }
+          
         });
+      // d3.queue()
+      //   .defer(d3.json, "data/euSfGeo.json")
+      //   .defer(d3.json, "data/PoliceDistricts.json")
+      //   .defer(d3.csv, "data/2018pdi.csv")
+      //   .await((err, mapData, pdData, dotData) => {
+      //     const sfMap = initMap();
+      //     let scaleData = util.pivot.incidentByDistrict(dotData);
+
+      //     drawMap(err, mapData, sfMap.path);
+      //     drawPDMap(err, pdData, sfMap.path, scaleData);
+
+      //     var stepper = setInterval(
+      //       (function() {
+      //         var date = new Date("1-1-2018"),
+      //           endDate = new Date("3-30-2018");
+      //         return function() {
+      //           year = timelineStep(
+      //             new Date(date.setDate(date.getDate() + 1)),
+      //             endDate
+      //           );
+      //         };
+      //       })(),
+      //       50
+      //     );
+
+      //   function timelineStep(date, endDate) {
+      //     requestAnimationFrame(function() {
+      //       d3.select("#currentTime").html(util.formatDate(date));
+      //       plotDots(err, dotData, sfMap.projection, util.formatDate(date));
+      //     });
+
+      //     if (date >= endDate) {
+      //       clearInterval(stepper);
+      //     }
+
+      //     return endDate;
+      //   }
+      // });
     </script>
   </body>
 </html>
