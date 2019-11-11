@@ -10,7 +10,7 @@
     <script src="layers.js"></script>
     <script src="util.js"></script>
     <script src="map.js"></script>
-    
+
     <link rel="stylesheet" href="style.css" />
     <title>d3Sf Police Incidents</title>
   </head>
@@ -18,6 +18,7 @@
     <form id="userform" class="dateInputForm">
       <label>Start date</label>
       <input
+        id="startDate"
         type="date"
         name="myDate"
         min="2018-01-01"
@@ -27,11 +28,12 @@
 
       <label>End date</label>
       <input
+        id="endDate"
         type="date"
         name="myDate"
         min="2018-01-01"
         max="2018-03-30"
-        value="2018-01-30"
+        value="2018-01-15"
       />
       <input id="formsubmit" type="submit" value="display" />
       <label>Visualization of SF Police Calls for Service and Incidents</label>
@@ -62,16 +64,21 @@
           />
         </svg>
       </label>
+      <input id="initial-state" type="hidden" value="false" />
     </form>
 
     <script>
-      document.getElementById("userform").onsubmit = event => {
-        event.preventDefault();
-        const startDate = event.currentTarget[0].value;
-        const endDate = event.currentTarget[1].value;
+      let userForm = document.getElementById("userform");
+      let ev;
+      userForm.onsubmit = event => {
+        if (event) event.preventDefault();
+
+        const startDate = document.getElementById("startDate").value;
+        const endDate = document.getElementById("endDate").value;
         getData({ startDate, endDate });
-        event.preventDefault();
       };
+
+      userForm.onsubmit();
     </script>
   </body>
 </html>

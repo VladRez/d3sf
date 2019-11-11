@@ -1,6 +1,7 @@
 function getData(dateRange) {
   cleanupMap();
   loadingMeter();
+
   d3.queue()
     .defer(f => {
       d3.json("data/euSfGeo.json")
